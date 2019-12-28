@@ -9,7 +9,7 @@ class MainClass
 {
     public static void Main(string[] args)
     {
-        int limit = 1000000;
+        int limit = 10000000;
 
         var recursive = new RecursiveSolver();
         //var iterative = new IterativeSolver();
@@ -36,6 +36,8 @@ class MainClass
         {
             Console.WriteLine($"Error calculating lengths: Brute force length ({maxChainBruteForced}) differs from Memoized length ({maxChainMemoized})");
         }
+
+        Console.ReadKey();
     }
 
     private static long Calculate(int limit, List<int> chainLengths, Func<CollatzChain, int> calc)
