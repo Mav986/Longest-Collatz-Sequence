@@ -9,29 +9,28 @@ namespace CollatzSequence
     // - If number is odd, multiply by 3, then add 1
     public abstract class Solver
     {
-        protected readonly Dictionary<long, int> _cache;
+        protected Dictionary<long, int> _cache;
 
         public Solver()
         {
             _cache = new Dictionary<long, int>();
         }
 
-        protected bool Solve(CollatzChain chain)
+        public void Reset()
         {
-            if (chain.CurrentNumber != 1)
-            {
-                if (chain.CurrentNumber % 2 == 0)
-                {
-                    chain.CurrentNumber /= 2;
-                }
-                else
-                {
-                    chain.CurrentNumber = chain.CurrentNumber * 3 + 1;
-                }
+            _cache = new Dictionary<long, int>();
+        }
 
-                return false;
+        protected void Solve(CollatzChain chain)
+        {
+            if (chain.CurrentNumber % 2 == 0)
+            {
+                chain.CurrentNumber /= 2;
             }
-            else return true;
+            else
+            {
+                chain.CurrentNumber = chain.CurrentNumber * 3 + 1;
+            }
         }
 
         public abstract int SolveCollatzMemoized(CollatzChain chain);

@@ -9,18 +9,15 @@
         // we simply continue on with the algorithm as normal.
         public override int SolveCollatzMemoized(CollatzChain chain)
         {
-            bool finished = false;
-            while (!finished)
+            while (true)
             {
                 if (_cache.ContainsKey(chain.CurrentNumber))
                 {
                     chain.Length += _cache[chain.CurrentNumber];
-                    finished = true;
+                    break;
                 }
-                else
-                {
-                    finished = Solve(chain);
-                }
+                else if (chain.CurrentNumber != 1) Solve(chain);
+                else break;
             }
 
             _cache.Add(chain.NumToCalculate, chain.Length);
@@ -29,10 +26,10 @@
 
         public override int SolveCollatzBruteForce(CollatzChain chain)
         {
-            bool finished = false;
-            while (!finished)
+            while (true)
             {
-                finished = Solve(chain);
+                if (chain.CurrentNumber != 1) Solve(chain);
+                else break;
             }
 
             return chain.Length;

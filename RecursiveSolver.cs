@@ -4,9 +4,9 @@
     {
         public override int SolveCollatzMemoized(CollatzChain chain)
         {
-            var length = GetCollatzSequenceMemoized(chain);
-            _cache.Add(chain.NumToCalculate, length);
-            return length;
+            GetCollatzSequenceMemoized(chain);
+            _cache.Add(chain.NumToCalculate, chain.Length);
+            return chain.Length;
         }
 
         public override int SolveCollatzBruteForce(CollatzChain chain)
@@ -14,7 +14,7 @@
             return GetCollatzSequenceBruteForce(chain);
         }
 
-        private int GetCollatzSequenceMemoized(CollatzChain chain)
+        private void GetCollatzSequenceMemoized(CollatzChain chain)
         {
             if (_cache.ContainsKey(chain.CurrentNumber))
             {
@@ -23,10 +23,8 @@
             else if (chain.CurrentNumber != 1)
             {
                 Solve(chain);
-                chain.Length = GetCollatzSequenceMemoized(chain);
+                GetCollatzSequenceMemoized(chain);
             }
-
-            return chain.Length;
         }
 
         private int GetCollatzSequenceBruteForce(CollatzChain chain)
