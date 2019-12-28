@@ -9,20 +9,43 @@ class MainClass
 {
     public static void Main(string[] args)
     {
-        int limit = 10000000;
+        int limit = 20000;
+        int numIterations = 1000;
 
-        var recursive = new RecursiveSolver();
-        //var iterative = new IterativeSolver();
+        var recursiveSolver = new RecursiveSolver();
+        var iterativeSolver = new IterativeSolver();
 
+        Console.Write("Testing iterative approach... ");
+        GetAverageResults(numIterations, limit, iterativeSolver);
+
+        Console.Write("Testing recursive approach... ");
+        GetAverageResults(numIterations, limit, recursiveSolver);
+
+        Console.WriteLine("Complete!");
+        Console.ReadKey();
+    }
+
+    private static void GetAverageResults(int numIterations, int limit, Solver solver)
+    {
+        double totalResults = 0, summedResults = 0;
+
+        for(int ii = 0; ii < numIterations; ii++)
+        {
+            totalResults++;
+            summedResults += RunAlgorithm(limit, solver);
+            solver.Reset();
+        }
+        var average = summedResults / totalResults;
+        Console.WriteLine($"memoization was on average {Math.Round(average, 1)}x faster.");
+    }
+
+    private static double RunAlgorithm(int limit, Solver solver)
+    {
         var memoizedLengths = new List<int>();
-        Console.Write("Calculating Memoized Solution... ");
-        var memoizedPerformance = Calculate(limit, memoizedLengths, recursive.SolveCollatzMemoized);
-        Console.WriteLine($"completed in {memoizedPerformance}ms!");
+        var memoizedPerformance = Calculate(limit, memoizedLengths, solver.SolveCollatzMemoized);
 
         var bruteForcedLengths = new List<int>();
-        Console.Write("Calculating Brute Force Solution... ");
-        var bruteForceperformance = Calculate(limit, bruteForcedLengths, recursive.SolveCollatzBruteForce);
-        Console.WriteLine($"completed in {bruteForceperformance}ms!");
+        var bruteForceperformance = Calculate(limit, bruteForcedLengths, solver.SolveCollatzBruteForce);
 
         var maxChainMemoized = GetMaxChain(memoizedLengths);
         var maxChainBruteForced = GetMaxChain(bruteForcedLengths);
@@ -30,14 +53,13 @@ class MainClass
 
         if (maxChainMemoized == maxChainBruteForced)
         {
-            Console.WriteLine($"Memoization was {Math.Round(memoizationGains, 1)}x faster than the brute force approach\nMax chain length is: {maxChainMemoized}");
+            //Console.WriteLine($"Memoization runtime: {memoizedPerformance}ms\nBrute Force runtime: {bruteForceperformance}ms");
+            return memoizationGains;
         }
         else
         {
-            Console.WriteLine($"Error calculating lengths: Brute force length ({maxChainBruteForced}) differs from Memoized length ({maxChainMemoized})");
+            throw new ArithmeticException($"Brute force length ({maxChainBruteForced}) differs from Memoized length ({maxChainMemoized})");
         }
-
-        Console.ReadKey();
     }
 
     private static long Calculate(int limit, List<int> chainLengths, Func<CollatzChain, int> calc)
